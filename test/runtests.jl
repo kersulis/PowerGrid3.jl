@@ -47,7 +47,7 @@ end
     @test delimited_string(getdomain(o)) == "1"
 
     @test string(o) == """
-                var test = d3.scaleOrdinal()
+                d3.scaleOrdinal()
                   .domain([1])
                   .range(['blue'])
                 """
@@ -116,4 +116,27 @@ end
     setnodeproperty!(gd, "testprop", testprop)
 
     getnodes(gd.nodes)[1]["testprop"] == "2 test"
+end
+
+@testset "html/css/js" begin
+    import PowerGrid3: css, svg, js
+    test_css = css()
+
+    test_css[33:36] == "#aaa"
+
+    test_css = css("test")
+    test_css[33:36] == "test"
+
+    test_svg = svg()
+
+    test_svg[13:15] == "960"
+
+    test_svg = svg(420)
+
+    test_svg[13:15] == "420"
+
+    test_js = js()
+    test_js[80:87] == "t = +svg"
+
+    test_js = js(OrdinalScale([0, 1], ["test", "test"]))
 end

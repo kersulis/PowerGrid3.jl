@@ -4,6 +4,35 @@ _Flexible graph visualization tool for power systems_
 
 This package specifies a few power grid visualizations, and has tools for mapping any data you like onto a particular visualization. It works well with [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl), so you can iterate and explore as you work on new algorithms and relaxations for power flow analysis.
 
+## Usage example
+
+```julia
+using PowerGrid3, PowerModels, Ipopt
+
+casepath = joinpath(Pkg.dir("PowerGrid3"), "test", "data", "pglib_opf_case14_ieee.m")
+solver = IpoptSolver()
+jsonpath = joinpath(Pkg.dir("PowerGrid3"), "html", "graphdata.json")
+htmlpath = joinpath(Pkg.dir("PowerGrid3"), "html", "index.html")
+
+pm = build_generic_model(casepath, ACPPowerModel, PowerModels.post_opf)
+result = solve_generic_model(pm, solver)
+
+gd = GraphData(pm)
+
+# dictionary with bus_id keys and vmag values
+vmag = mapbuspropertysol(pm, result, "vm")
+
+# encode vmin as color in JSON data
+setnodeproperty!(gd, "color", vmag)
+
+# set lower and upper extrema to blue and red, resp.
+nodeColor = ContinuousScale(vmag, ["blue", "red"])
+
+savegraphdata(jsonpath, gd)
+savehtml(htmlpath, nodeColor=nodeColor)
+
+```
+
 Effective power system graph visualizations include:
 - Force-directed layouts
     - Applying uniform forces reveals basic structure of the unweighted graph

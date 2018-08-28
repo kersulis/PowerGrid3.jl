@@ -34,8 +34,6 @@ GraphData(pm::GenericPowerModel) = GraphData(GraphNodes(pm), GraphLinks(pm))
 
 JSON.print(io::IO, gd::GraphData) = JSON.print(io, Dict("nodes" => getnodes(gd.nodes), "links" => getlinks(gd.links)))
 
-Base.string(gd::GraphData) = JSON.print(gn)
-
 function setnodeproperty!(gn::GraphNodes, propertyname::String, values::Dict)
     if length(values) != length(gn)
         error("Expected $(length(gn)) key/value pairs, got $(length(values))")
