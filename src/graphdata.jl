@@ -7,8 +7,10 @@ struct GraphNodes
 
     function GraphNodes(pm::GenericPowerModel)
         b = ref(pm, :bus)
-        nodes = [Dict{String, Any}("id" => k) for k in keys(b)]
-        new(nodes)
+        busnodes = [Dict{String, Any}("id" => k, "size" => "bus") for k in keys(b)]
+        g = ref(pm, :gen)
+        gennodes = [Dict{String, Any}("id" => "g"*string(k), "size" => "gen") for k in keys(g)]
+        new([busnodes; gennodes])
     end
 end
 getnodes(gn::GraphNodes) = gn.nodes
@@ -19,8 +21,12 @@ struct GraphLinks
 
     function GraphLinks(pm::GenericPowerModel)
         bp = ref(pm, :buspairs)
-        links = [Dict{String, Any}("source" => k[1], "target" => k[2]) for k in keys(bp)]
-        new(links)
+        buslinks = [Dict{String, Any}("source" => k[1], "target" => k[2]) for k in keys(bp)]
+        genlinks = Vector{Dict{String, Any}}()
+        for (gid, g) in ref(pm, :gen)
+            push!(genlinks, Dict{String, Any}("source" => g["gen_bus"], "target" => "g"*string(gid)))
+        end
+        new([buslinks; genlinks])
     end
 end
 getlinks(gl::GraphLinks) = gl.links

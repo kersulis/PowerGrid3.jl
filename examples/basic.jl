@@ -4,7 +4,6 @@ casepath = joinpath(Pkg.dir("PowerGrid3"), "test", "data", "pglib_opf_case14_iee
 
 pm = build_generic_model(casepath, ACPPowerModel, PowerModels.post_opf)
 
-Pkg.build("Ipopt")
 solver = IpoptSolver()
 result = solve_generic_model(pm, solver)
 

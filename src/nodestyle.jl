@@ -23,5 +23,8 @@ function mapbuspropertysol(pm::GenericPowerModel, result, buskey::String)
     for id in ids(pm, :bus)
         p[id] = result["solution"]["bus"][string(id)][buskey]
     end
+    for (id, g) in ref(pm, :gen)
+        p["g"*string(id)] = p[g["gen_bus"]]
+    end
     return p
 end

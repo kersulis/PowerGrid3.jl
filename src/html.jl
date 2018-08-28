@@ -41,7 +41,7 @@ const d3 = """
 
 function js(
             nodeColor::D3Scale=OrdinalScale([0, 1], ["black", "black"]),
-            nodeSize::D3Scale=OrdinalScale([0, 1], [3, 3]),
+            nodeSize::D3Scale=OrdinalScale([0, 1], [7, 7]),
             edgeColor::D3Scale=OrdinalScale([0, 1], ["black", "black"]),
             edgeSize::D3Scale=OrdinalScale([0, 1], [1, 1])
     )
@@ -139,9 +139,9 @@ Build html file by in chunks by calling `css(css_opts...)`, `svg(svg_opts...)`, 
 """
 function savehtml(savepath::String;
             nodeColor::D3Scale=OrdinalScale([0, 1], ["black", "black"]),
-            nodeSize::D3Scale=OrdinalScale([0, 1], [3, 3]),
+            nodeSize::D3Scale=OrdinalScale(["bus", "gen"], [7, 4]),
             edgeColor::D3Scale=OrdinalScale([0, 1], ["black", "black"]),
-            edgeSize::D3Scale=OrdinalScale([0, 1], [1, 1]))
+            edgeSize::D3Scale=OrdinalScale([0, 1], [2, 2]))
     open(savepath, "w") do f
         write(f, *(header, css(), svg(), d3,
         js(nodeColor, nodeSize, edgeColor, edgeSize)))
