@@ -21,7 +21,7 @@ ContinuousScale(domain::Vector, range::Vector) = ContinuousScale(:Linear, domain
 
 # default domain when only range is specified
 function ContinuousScale(mapping::Dict, range::Vector)
-    assert(length(range) == 2)
+    @assert length(range) == 2
 
     a, b = extrema(values(mapping))
     domain = [a, b]
