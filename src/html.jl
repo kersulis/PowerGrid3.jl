@@ -5,15 +5,12 @@ const header = """
 <meta charset="utf-8">
 """
 
+# TODO set default stroke color to be over-ridden by edgeColor
 function css(edge_stroke::String="#aaa",
             node_stroke::String="none",
             node_stroke_width::String="40px")
     return """
     <style>
-
-    .link line {
-      stroke: $edge_stroke;
-    }
 
     .node circle {
       pointer-events: all;
@@ -29,7 +26,7 @@ end
     svg(width, height)
 returns an SVG tag with the specified width and height.
 """
-function svg(width::Int64=960, height::Int64=600)
+function svg(width::Int64=2500, height::Int64=2000)
     return """
     <svg width="$width" height="$height"></svg>
     """
@@ -55,7 +52,7 @@ function js(
 
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
-        .force("charge", d3.forceManyBody())
+        .force("charge", d3.forceManyBody().strength(function() { return -9; }))
         .force("center", d3.forceCenter(width / 2, height / 2));
 
     d3.json("graphdata.json", function(error, graph) {
@@ -75,6 +72,7 @@ function js(
         .data(graph.links)
         .enter()
           .append("line")
+          .attr("stroke-width", function(d) { return edgeSize(d.size); })
           .attr("stroke", function(d) { return edgeColor(d.color); });
 
       var node = svg.append("g")
