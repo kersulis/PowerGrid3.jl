@@ -3,11 +3,11 @@ export savegraphdata
 function delimited_string(v::Vector{T};
     delimiter=", ", element_encloser=(T == String ? "'" : "")) where T
 
-    vs = [element_encloser*string(vi)*element_encloser for vi in v]
+    vs = [element_encloser * string(vi) * element_encloser for vi in v]
     if length(vs) == 1
         return vs[1]
     else
-        return *((vi*delimiter for vi in vs[1:end-1])...)*vs[end]
+        return *((vi * delimiter for vi in vs[1:(end - 1)])...) * vs[end]
     end
 end
 
