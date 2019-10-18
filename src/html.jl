@@ -26,7 +26,7 @@ end
     svg(width, height)
 returns an SVG tag with the specified width and height.
 """
-function svg(width::Int64=2500, height::Int64=2000)
+function svg(width::Int64, height::Int64)
     return """
     <svg width="$width" height="$height"></svg>
     """
@@ -139,9 +139,12 @@ function savehtml(savepath::String;
             nodeColor::D3Scale=OrdinalScale([0, 1], ["black", "black"]),
             nodeSize::D3Scale=OrdinalScale(["bus", "gen"], [7, 4]),
             edgeColor::D3Scale=OrdinalScale([0, 1], ["black", "black"]),
-            edgeSize::D3Scale=OrdinalScale([0, 1], [2, 2]))
+            edgeSize::D3Scale=OrdinalScale([0, 1], [2, 2]),
+            svg_width::Int64=1200,
+            svg_height::Int64=800
+            )
     open(savepath, "w") do f
-        write(f, *(header, css(), svg(), d3,
+        write(f, *(header, css(), svg(svg_width, svg_height), d3,
         js(nodeColor, nodeSize, edgeColor, edgeSize)))
     end
     return

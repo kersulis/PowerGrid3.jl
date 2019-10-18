@@ -25,7 +25,7 @@ property. Valid properties are determined by PowerModels:
 - vm
 - base_kv
 """
-function mapbusproperty(pm::GenericPowerModel, buskey::String)
+function mapbusproperty(pm::AbstractPowerModel, buskey::String)
     p = Dict()
     for (id, busdata) in ref(pm, :bus)
         p[id] = busdata[buskey]
@@ -47,13 +47,13 @@ function mapbusproperty(nd::Dict{String, Any}, buskey::String)
     return p
 end
 
-function mapbuspropertysol(pm::GenericPowerModel, result, buskey::String)
-    p = Dict()
+function mapbuspropertysol(pm::AbstractPowerModel, result, buskey::String)
+    p = Dict{String, Any}()
     for id in ids(pm, :bus)
-        p[id] = result["solution"]["bus"][string(id)][buskey]
+        p[string(id)] = result["solution"]["bus"][string(id)][buskey]
     end
     for (id, g) in ref(pm, :gen)
-        p["g" * string(id)] = p[g["gen_bus"]]
+        p["g" * string(id)] = p[string(g["gen_bus"])]
     end
     return p
 end

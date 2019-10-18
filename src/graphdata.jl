@@ -6,7 +6,7 @@ struct GraphNodes
     nodes::Vector{Dict{String, Any}}
 
     "Constructor for PowerModels generic power model type"
-    function GraphNodes(pm::GenericPowerModel)
+    function GraphNodes(pm::AbstractPowerModel)
         b = ref(pm, :bus)
         busnodes = [Dict{String, Any}("id" => string(k), "size" => "bus") for k in keys(b)]
         g = ref(pm, :gen)
@@ -32,7 +32,7 @@ struct GraphLinks
     links::Vector{Dict{String, Any}}
 
     "Constructor for PowerModels generic power model type"
-    function GraphLinks(pm::GenericPowerModel)
+    function GraphLinks(pm::AbstractPowerModel)
         bp = ref(pm, :buspairs)
 
         buslinks = Dict{String, Any}[]
@@ -100,7 +100,7 @@ struct GraphData
     links::GraphLinks
 end
 
-GraphData(pm::GenericPowerModel) = GraphData(GraphNodes(pm), GraphLinks(pm))
+GraphData(pm::AbstractPowerModel) = GraphData(GraphNodes(pm), GraphLinks(pm))
 
 function GraphData(nd::Dict{String, Any})
     @assert haskey(nd, "baseMVA") "Input must be PowerModels network data dict"
