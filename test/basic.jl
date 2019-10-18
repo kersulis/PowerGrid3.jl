@@ -1,6 +1,6 @@
 using PowerGrid3, PowerModels, Ipopt
 
-casepath = joinpath(Pkg.dir("PowerGrid3"), "test", "data", "pglib_opf_case14_ieee.m")
+casepath = joinpath(@__DIR__, "data", "pglib_opf_case14_ieee.m")
 
 pm = build_generic_model(casepath, ACPPowerModel, PowerModels.post_opf)
 
@@ -14,14 +14,16 @@ gd = GraphData(pm)
 # dictionary with bus_id keys and vmag values
 vmag = mapbuspropertysol(pm, result, "vm")
 
-# encode vmin as color in JSON data
+# encode vmag as color in JSON data
 setnodeproperty!(gd, "color", vmag)
 
 # set lower and upper extrema to blue and red, resp.
 nodeColor = ContinuousScale(vmag, ["blue", "red"])
 
-jsonpath = joinpath(Pkg.dir("PowerGrid3"), "html", "graphdata.json")
+mkdir(joinpath(@__DIR__, "temp"))
+
+jsonpath = joinpath(@__DIR__, "temp", "graphdata.json")
 savegraphdata(jsonpath, gd)
 
-htmlpath = joinpath(Pkg.dir("PowerGrid3"), "html", "index.html")
+htmlpath = joinpath(@__DIR__, "temp", "index.html")
 savehtml(htmlpath, nodeColor=nodeColor)
